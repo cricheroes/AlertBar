@@ -85,10 +85,10 @@ public final class AlertBar {
                 baseView.transform = CGAffineTransform(rotationAngle: .pi)
             }
         }
-        window.isUserInteractionEnabled = false
+        window.isUserInteractionEnabled = true
         window.windowLevel = AlertBar.kWindowLevel
         window.makeKeyAndVisible()
-        baseView.isUserInteractionEnabled = false
+        baseView.isUserInteractionEnabled = true
         window.addSubview(baseView)
 
         let safeArea: UIEdgeInsets
@@ -181,14 +181,27 @@ internal class AlertBarView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.frame.origin.y = 40
+        self.frame.origin.x = 20
+        self.frame.size.width = self.frame.size.width - 40
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(alertTapped(tapGestureRecognizer:)))
+        self.isUserInteractionEnabled = true
+        self.addGestureRecognizer(tapGestureRecognizer)
+        
         let margin = AlertBarView.kMargin
         messageLabel.frame = CGRect(x: margin, y: margin, width: frame.width - margin*2, height: frame.height - margin*2)
         messageLabel.font = UIFont.systemFont(ofSize: 15)
         addSubview(messageLabel)
-
+        self.layer.cornerRadius = 20
+        self.clipsToBounds = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleRotate(_:)), name: .UIDeviceOrientationDidChange, object: nil)
     }
-
+    @objc func alertTapped(tapGestureRecognizer: UITapGestureRecognizer)
+    {
+        self.hide()
+        // Your action
+    }
     func fit(safeArea: UIEdgeInsets) {
         let margin = AlertBarView.kMargin
         messageLabel.sizeToFit()
