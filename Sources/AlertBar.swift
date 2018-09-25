@@ -101,9 +101,11 @@ public final class AlertBar {
         alertBarView.delegate = self
         alertBarView.backgroundColor = type.backgroundColor
         alertBarView.messageLabel.textColor = type.textColor
-        alertBarView.messageLabel.text = message
+        alertBarView.messageLabel.text = """
+        \n\(message)\n
+        """
         alertBarView.messageLabel.numberOfLines = currentOptions.isStretchable ? 0 : 1
-        alertBarView.messageLabel.textAlignment = currentOptions.textAlignment
+        alertBarView.messageLabel.textAlignment = .center
         alertBarView.fit(safeArea: currentOptions.shouldConsiderSafeArea ? safeArea : .zero)
         alertBarViews.append(alertBarView)
         baseView.addSubview(alertBarView)
@@ -181,7 +183,7 @@ internal class AlertBarView: UIView {
         super.init(frame: frame)
         let margin = AlertBarView.kMargin
         messageLabel.frame = CGRect(x: margin, y: margin, width: frame.width - margin*2, height: frame.height - margin*2)
-        messageLabel.font = UIFont.systemFont(ofSize: 12)
+        messageLabel.font = UIFont.systemFont(ofSize: 15)
         addSubview(messageLabel)
 
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleRotate(_:)), name: .UIDeviceOrientationDidChange, object: nil)
