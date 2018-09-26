@@ -105,10 +105,13 @@ public final class AlertBar {
         alertBarView.messageLabel.text = """
         \n\(message)\n
         """
-        alertBarView.messageLabel.numberOfLines = currentOptions.isStretchable ? 0 : 1
+        alertBarView.messageLabel.numberOfLines = 0
         alertBarView.messageLabel.textAlignment = .center
         alertBarView.fit(safeArea: currentOptions.shouldConsiderSafeArea ? safeArea : .zero)
         alertBarViews.append(alertBarView)
+        
+        window.frame.size.height = alertBarView.frame.height + 50
+        baseView.frame.size.height = window.frame.size.height
         
         
         let scale = true
@@ -125,7 +128,8 @@ public final class AlertBar {
         baseView.addSubview(alertBarView)
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(windowTapped(tapGestureRecognizer:)))
         window.addGestureRecognizer(tapGestureRecognizer)
-
+        
+        
         let statusBarHeight: CGFloat = max(UIApplication.shared.statusBarFrame.height, safeArea.top)
         let alertBarHeight: CGFloat = max(statusBarHeight, alertBarView.frame.height)
         alertBarView.show(duration: 2, translationY: -alertBarHeight) {
