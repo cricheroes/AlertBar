@@ -85,6 +85,7 @@ public final class AlertBar {
                 baseView.transform = CGAffineTransform(rotationAngle: .pi)
             }
         }
+        //self.alertBarViews
         window.isUserInteractionEnabled = true
         window.windowLevel = AlertBar.kWindowLevel
         window.makeKeyAndVisible()
@@ -109,7 +110,9 @@ public final class AlertBar {
         alertBarView.fit(safeArea: currentOptions.shouldConsiderSafeArea ? safeArea : .zero)
         alertBarViews.append(alertBarView)
         baseView.addSubview(alertBarView)
-        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(windowTapped(tapGestureRecognizer:)))
+        window.addGestureRecognizer(tapGestureRecognizer)
+
         let statusBarHeight: CGFloat = max(UIApplication.shared.statusBarFrame.height, safeArea.top)
         let alertBarHeight: CGFloat = max(statusBarHeight, alertBarView.frame.height)
         alertBarView.show(duration: 2, translationY: -alertBarHeight) {
@@ -122,6 +125,10 @@ public final class AlertBar {
         }
     }
     
+    @objc func windowTapped(tapGestureRecognizer: UITapGestureRecognizer)
+    {
+            alertBarViews.forEach({ $0.hide() })
+    }
     public func show(error: Error, duration: TimeInterval = 2, options: Options? = nil, completion: (() -> Void)? = nil) {
         let code = (error as NSError).code
         let localizedDescription = error.localizedDescription
