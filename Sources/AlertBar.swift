@@ -109,6 +109,19 @@ public final class AlertBar {
         alertBarView.messageLabel.textAlignment = .center
         alertBarView.fit(safeArea: currentOptions.shouldConsiderSafeArea ? safeArea : .zero)
         alertBarViews.append(alertBarView)
+        
+        
+        let scale = true
+        alertBarView.layer.masksToBounds = false
+        alertBarView.layer.shadowColor = UIColor.darkGray.cgColor
+        alertBarView.layer.shadowOpacity = 0.25
+        alertBarView.layer.shadowOffset = CGSize(width: 1, height: 3)
+        alertBarView.layer.shadowRadius = 1
+        
+        //alertBarView.layer.shadowPath = UIBezierPath(rect: bounds).cgPath
+        alertBarView.layer.shouldRasterize = true
+        alertBarView.layer.rasterizationScale = scale ? UIScreen.main.scale : 1
+        
         baseView.addSubview(alertBarView)
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(windowTapped(tapGestureRecognizer:)))
         window.addGestureRecognizer(tapGestureRecognizer)
@@ -201,7 +214,7 @@ internal class AlertBarView: UIView {
         messageLabel.font = UIFont.systemFont(ofSize: 15)
         addSubview(messageLabel)
         self.layer.cornerRadius = 20
-        self.clipsToBounds = true
+        //self.clipsToBounds = true
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleRotate(_:)), name: .UIDeviceOrientationDidChange, object: nil)
     }
     @objc func alertTapped(tapGestureRecognizer: UITapGestureRecognizer)
