@@ -35,7 +35,7 @@ public enum AlertBarType {
 
 public final class AlertBar {
     public static let shared = AlertBar()
-    private static let kWindowLevel: CGFloat = UIWindowLevelStatusBar + 1
+    private static let kWindowLevel: CGFloat = UIWindow.Level.statusBar.rawValue + 1
     private var alertBarViews: [AlertBarView] = []
     private var options = Options(shouldConsiderSafeArea: true, isStretchable: false, textAlignment: .left)
     
@@ -76,7 +76,7 @@ public final class AlertBar {
             window = UIWindow(frame: CGRect(x: 0, y: 0, width: height, height: width))
             if userInterfaceIdiom == .phone {
                 let sign: CGFloat = orientation == .landscapeLeft ? -1 : 1
-                let d = fabs(width - height) / 2
+                let d = abs(width - height) / 2
                 baseView.transform = CGAffineTransform(rotationAngle: sign * CGFloat.pi / 2).translatedBy(x: sign * d, y: sign * d)
             }
         } else {
@@ -87,7 +87,7 @@ public final class AlertBar {
         }
         //self.alertBarViews
         window.isUserInteractionEnabled = true
-        window.windowLevel = AlertBar.kWindowLevel
+        window.windowLevel = UIWindow.Level(rawValue: AlertBar.kWindowLevel)
         window.makeKeyAndVisible()
         baseView.isUserInteractionEnabled = true
         window.addSubview(baseView)
@@ -219,7 +219,7 @@ internal class AlertBarView: UIView {
         addSubview(messageLabel)
         self.layer.cornerRadius = 20
         //self.clipsToBounds = true
-        NotificationCenter.default.addObserver(self, selector: #selector(self.handleRotate(_:)), name: .UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleRotate(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     @objc func alertTapped(tapGestureRecognizer: UITapGestureRecognizer)
     {
@@ -227,7 +227,7 @@ internal class AlertBarView: UIView {
         // Your action
     }
     func fit(safeArea: UIEdgeInsets) {
-        let margin = AlertBarView.kMargin
+        _ = AlertBarView.kMargin
         messageLabel.sizeToFit()
         messageLabel.frame.origin.x = 0
         messageLabel.frame.origin.y = 0
@@ -236,7 +236,7 @@ internal class AlertBarView: UIView {
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self, name: .UIDeviceOrientationDidChange, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
     }
     
     func show(duration: TimeInterval, translationY: CGFloat, completion: (() -> Void)?) {
